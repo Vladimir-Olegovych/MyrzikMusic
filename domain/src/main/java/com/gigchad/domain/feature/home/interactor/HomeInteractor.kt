@@ -7,7 +7,7 @@ import javax.inject.Inject
 class HomeInteractor @Inject constructor(
     private val homeRepository: HomeRepository
 ) {
-    suspend fun getMusic(): Result<List<MusicData>> {
-        return homeRepository.getMusic()
+    suspend fun getPage(query: String, page: Int): Result<List<MusicData>> {
+        return homeRepository.getPage(query = query, page = page)
     }
 }
