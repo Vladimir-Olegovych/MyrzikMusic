@@ -8,16 +8,16 @@ import com.gigchad.domain.feature.home.models.MusicData
 class MusicPagingSource(
     private val homeInteractor: HomeInteractor,
     private val query: String
-) : PagingSource<Int, MusicData>() {
+) : PagingSource<Int, MusicPagingSource.Item>() {
 
-    override fun getRefreshKey(state: PagingState<Int, MusicData>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Item>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MusicData> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Item> {
         return try {
             val page = params.key ?: 1
             val result = homeInteractor.getPage(query, page)
@@ -26,7 +26,7 @@ class MusicPagingSource(
                 throw result.exceptionOrNull() ?: Exception("Failed to load page")
             }
 
-            val musicList = result.getOrThrow()
+            val musicList = result.getOrThrow().map { Item(musicData = it) }
 
             LoadResult.Page(
                 data = musicList,
@@ -37,4 +37,6 @@ class MusicPagingSource(
             LoadResult.Error(e)
         }
     }
+
+    class Item(var inFavorite: Boolean = false, val musicData: MusicData)
 }

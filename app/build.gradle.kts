@@ -46,9 +46,13 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
-    implementation("androidx.paging:paging-compose:3.3.0")
-    implementation("androidx.paging:paging-runtime-ktx:3.3.0")
+    //implementation(libs.accompanist.systemuicontroller)
+
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime.ktx)
+
     implementation(libs.androidx.navigation.compose)
+
     implementation(libs.kotlinx.serialization)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)

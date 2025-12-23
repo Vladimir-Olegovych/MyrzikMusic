@@ -1,10 +1,10 @@
 package com.gigchad.data.feature.home.datasource
 
-import com.gigchad.data.feature.home.datasource.repository.HomeDataSourceRepository
+import com.gigchad.data.feature.home.datasource.repository.RemoteHomeDataSourceRepository
 import com.gigchad.domain.feature.home.models.MusicData
 import org.jsoup.Jsoup
 
-class HomeDataSourceImpl: HomeDataSourceRepository {
+class RemoteHomeDataSourceImpl: RemoteHomeDataSourceRepository {
 
     companion object {
         const val TIME_OUT = 10000

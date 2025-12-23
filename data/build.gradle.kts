@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "1.9.0"
     kotlin("kapt")
 }
 
@@ -35,7 +36,17 @@ android {
 
 dependencies {
     implementation(project(":domain"))
+
+    implementation(libs.androidx.dataStore)
+
+    implementation(libs.kotlinx.serialization)
+
     implementation(libs.jsoup)
+
+    implementation(libs.androidx.room)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 
