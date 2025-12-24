@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.gigchad.music.core.mediaplayer.MediaPlayerUtils
 import com.gigchad.music.core.navigation.HomeDestination
 import com.gigchad.music.feature.home.HomeDestination
 import com.gigchad.music.feature.shared.theme.MyrzikMusicTheme
@@ -31,11 +30,6 @@ class MainActivity : ComponentActivity() {
                 BindNavigation()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        MediaPlayerUtils.stop()
     }
 }
 

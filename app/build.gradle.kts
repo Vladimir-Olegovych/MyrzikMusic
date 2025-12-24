@@ -48,6 +48,7 @@ dependencies {
 
     //implementation(libs.accompanist.systemuicontroller)
 
+    implementation("androidx.media:media:1.7.0")
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.paging.runtime.ktx)
 
