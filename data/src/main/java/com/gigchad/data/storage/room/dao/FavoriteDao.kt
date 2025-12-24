@@ -28,6 +28,9 @@ interface FavoriteDao {
     @Query("DELETE FROM favorite_store WHERE music_url = :musicUrl")
     suspend fun deleteByUrl(musicUrl: String): Int
 
+    @Query("DELETE FROM favorite_store WHERE server_id = :serverId")
+    suspend fun deleteByServerId(serverId: String): Int
+
     /**
      * Удалить несколько записей по ключам
      */

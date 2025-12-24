@@ -16,25 +16,22 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.gigchad.domain.feature.home.models.MusicData
 import com.gigchad.music.core.mediaplayer.MediaPlayerUtils
-import com.gigchad.music.feature.shared.home.pagining.MusicPagingSource
 import com.gigchad.music.feature.shared.theme.ApplicationColors
 import com.gigchad.music.feature.shared.theme.ApplicationTypography
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun MusicCard(item: MusicPagingSource.Item, onFavorite: (Boolean) -> Unit) {
-
-    val musicData = item.musicData
-    val inFavorite = MutableStateFlow(item.inFavorite)
-    val inFavoriteState = inFavorite.collectAsState()
-
+fun MusicCard(
+    inFavorite: Boolean,
+    musicData: MusicData,
+    onFavorite: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
@@ -92,21 +89,20 @@ fun MusicCard(item: MusicPagingSource.Item, onFavorite: (Boolean) -> Unit) {
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
                 Icon(
                     modifier = Modifier.clickable(
                         onClick = {
-                            inFavorite.value = !inFavorite.value
-                            item.inFavorite = inFavorite.value
-                            onFavorite.invoke(inFavorite.value)
+                            onFavorite.invoke(!inFavorite)
+
                         },
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ),
-                    imageVector = if(inFavoriteState.value) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    imageVector = if(inFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    tint = ApplicationColors.Black,
                     contentDescription = null
                 )
             }

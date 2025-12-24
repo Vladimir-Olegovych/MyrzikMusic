@@ -25,7 +25,6 @@ class RemoteHomeDataSourceImpl: RemoteHomeDataSourceRepository {
                 page > 1 -> "$urlType/$page"
                 else -> urlType
             }
-            println(url)
 
             val doc = Jsoup.connect(url)
                 .userAgent("Mozilla/5.0")
@@ -57,7 +56,7 @@ class RemoteHomeDataSourceImpl: RemoteHomeDataSourceRepository {
 
                 resultList.add(
                     MusicData(
-                        id = trackId,
+                        serverId = trackId,
                         title = title,
                         artist = artist,
                         duration = duration,

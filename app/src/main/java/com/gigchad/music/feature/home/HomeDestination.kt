@@ -1,6 +1,11 @@
 package com.gigchad.music.feature.home
 
 import androidx.compose.animation.EnterTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -14,7 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,6 +31,7 @@ import com.gigchad.music.feature.home.screens.HomeDestinations
 import com.gigchad.music.feature.home.screens.favorite.FavoriteScreen
 import com.gigchad.music.feature.home.screens.home.HomeScreen
 import com.gigchad.music.feature.home.screens.settings.SettingsScreen
+import com.gigchad.music.feature.shared.theme.ApplicationBrush
 import com.gigchad.music.feature.shared.theme.ApplicationColors
 import com.gigchad.music.feature.shared.theme.ApplicationTypography
 
@@ -43,10 +51,11 @@ fun HomeDestination() {
                     NavigationBarItem(
                         colors = NavigationBarItemDefaults.colors().copy(
                             selectedIconColor = ApplicationColors.Black,
-                            unselectedIconColor = ApplicationColors.Black,
+                            unselectedIconColor = ApplicationColors.White,
 
-                            selectedTextColor = ApplicationColors.White,
-                            unselectedTextColor = ApplicationColors.Black
+                            selectedTextColor = ApplicationColors.Black,
+                            unselectedTextColor = ApplicationColors.White,
+                            selectedIndicatorColor = ApplicationColors.Transparent
                         ),
                         selected = selectedIndex == index,
                         onClick = {
@@ -73,19 +82,39 @@ fun HomeDestination() {
         NavHost(
             modifier = Modifier.padding(bottom = contentPadding.calculateBottomPadding()),
             navController = navController,
-            startDestination = HomeDestinations.HomeDestination,
-            enterTransition = { EnterTransition.None }
+            startDestination = HomeDestinations.HomeDestination
         ) {
             composable<HomeDestinations.HomeDestination> {
-                HomeScreen(homeViewModel)
+                ScreenDestinationContent {
+                    HomeScreen(homeViewModel)
+                }
             }
             composable<HomeDestinations.FavoriteDestination> {
-                FavoriteScreen()
+                ScreenDestinationContent {
+                    FavoriteScreen()
+                }
             }
             composable<HomeDestinations.SettingsDestination> {
-                SettingsScreen()
+                ScreenDestinationContent {
+                    SettingsScreen()
+                }
             }
         }
     }
 }
 
+@Composable
+private fun ScreenDestinationContent(action: @Composable () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        action.invoke()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(20.dp)
+                .background(brush = ApplicationBrush.transparentBrushToYellowMain),
+        )
+    }
+}

@@ -11,6 +11,7 @@ import com.gigchad.music.feature.shared.home.pagining.MusicPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,12 +24,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor (
+class HomeViewModel @Inject constructor(
     private val ioScope: CoroutineScope,
     private val homeInteractor: HomeInteractor
-): ViewModel() {
+) : ViewModel() {
 
-    private val _favoriteEntities = MutableStateFlow<MutableMap<String, MusicData>>(HashMap())
+    private val _favoriteEntities = MutableStateFlow<Map<String, MusicData>>(emptyMap())
     val favoriteEntities: StateFlow<Map<String, MusicData>> = _favoriteEntities.asStateFlow()
 
     private val _query = MutableStateFlow("")
@@ -36,20 +37,6 @@ class HomeViewModel @Inject constructor (
 
     init {
         _query.value = ""
-        ioScope.launch {
-            val favoriteItems = homeInteractor.getAllFavorites()
-            viewModelScope.launch {
-                val map = HashMap<String, MusicData>()
-                _favoriteEntities.value.forEach {
-                    map[it.key] = it.value
-                }
-                favoriteItems.forEach {
-                    println(it)
-                    map[it.dataUrl] = it
-                }
-                _favoriteEntities.value = map
-            }
-        }
     }
 
     @OptIn(FlowPreview::class)
@@ -74,19 +61,39 @@ class HomeViewModel @Inject constructor (
         }.flow
     }.cachedIn(ioScope)
 
+
     fun setQuery(newQuery: String) {
         _query.value = newQuery
     }
 
-    fun updateFavorite(musicData: MusicData, value: Boolean){
-        if (value){
-            _favoriteEntities.value[musicData.dataUrl] = musicData
-        } else {
-            _favoriteEntities.value.remove(musicData.dataUrl)
+    fun updateFavoriteItems() {
+        viewModelScope.launch {
+            val favorites = ioScope.async {
+                homeInteractor.getAllFavorites()
+            }.await()
+
+            val map = favorites.associateBy { it.serverId }
+            _favoriteEntities.value = map
         }
+    }
+
+    fun updateFavorite(musicData: MusicData, value: Boolean) {
+        updateFavoriteLocally(musicData, value)
+
         ioScope.launch {
             homeInteractor.updateFavorite(musicData, value)
         }
     }
 
+    private fun updateFavoriteLocally(musicData: MusicData, value: Boolean) {
+        val currentFavorites = _favoriteEntities.value.toMutableMap()
+
+        if (value) {
+            currentFavorites[musicData.serverId] = musicData
+        } else {
+            currentFavorites.remove(musicData.serverId)
+        }
+
+        _favoriteEntities.value = currentFavorites.toMap()
+    }
 }

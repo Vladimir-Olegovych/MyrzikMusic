@@ -5,7 +5,7 @@ import com.gigchad.domain.feature.home.models.MusicData
 fun MusicData.toFavoriteEntity(): FavoriteEntity {
     return FavoriteEntity(
         musicUrl = this.dataUrl,
-        serverId = this.id,
+        serverId = this.serverId,
         title = this.title,
         artist = this.artist,
         duration = this.duration,
@@ -16,7 +16,7 @@ fun MusicData.toFavoriteEntity(): FavoriteEntity {
 
 fun FavoriteEntity.toMusicData(): MusicData {
     return MusicData(
-        id = this.musicUrl,
+        serverId = this.serverId,
         title = this.title,
         artist = this.artist,
         duration = this.duration,
