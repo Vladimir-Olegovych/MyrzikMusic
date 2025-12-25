@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.gigchad.domain.feature.home.models.MusicData
-import com.gigchad.music.core.mediaplayer.MediaPlayerUtils
 import com.gigchad.music.feature.shared.theme.ApplicationColors
 import com.gigchad.music.feature.shared.theme.ApplicationTypography
 
@@ -43,7 +42,7 @@ fun MusicCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = {
-                    MediaPlayerUtils.play(musicData.dataUrl)
+                    //MediaPlayerUtils.play(musicData.dataUrl)
                 })
         ) {
             Text(

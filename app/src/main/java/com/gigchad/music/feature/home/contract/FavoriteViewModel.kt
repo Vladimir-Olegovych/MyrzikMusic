@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gigchad.domain.feature.home.interactor.FavoriteInteractor
 import com.gigchad.domain.feature.home.models.MusicData
+import com.gigchad.music.core.service.ServiceBinder
+import com.gigchad.music.service.MusicPlayerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val ioScope: CoroutineScope,
+    private val serviceBinder: ServiceBinder<MusicPlayerService, MusicPlayerService.MusicPlayerBinder>,
     private val favoriteInteractor: FavoriteInteractor
 ) : ViewModel() {
 
@@ -30,6 +33,7 @@ class FavoriteViewModel @Inject constructor(
         }
     }
 
+    fun getServiceBinder() = serviceBinder
     fun removeFavorite(musicData: MusicData) {
         val currentList = _favoriteEntities.value
         val newList = currentList.toMutableList().apply {

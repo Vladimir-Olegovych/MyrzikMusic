@@ -1,33 +1,34 @@
 package com.gigchad.music.core.service
 
-import android.app.Activity
 import android.app.Service
 import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import kotlin.jvm.java
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class ServiceBinder<T: Service, B: AdaptiveServiceBinder<*>>() {
 
-    private var service: T? = null
-    private var isBound = false
+    private val service = MutableStateFlow<T?>(null)
+    private val isBound = MutableStateFlow(false)
 
-    fun getService(): T = service!!
-    fun isBound(): Boolean = isBound
+    fun getService() = service.asStateFlow()
+    fun isBound() = isBound.asStateFlow()
 
     val connection = object : ServiceConnection {
         override fun onServiceConnected(
             name: ComponentName?,
             binder: IBinder?
         ) {
-            service = (binder as B).getService() as T
-            isBound = true
+            service.update { (binder as B).getService() as T }
+            isBound.update { true }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            isBound = false
+            service.update { null }
+            isBound.update { false }
         }
 
     }

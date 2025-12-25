@@ -109,7 +109,7 @@ class MusicPlayerService: Service() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
         } else {
-            mediaPlayer.release()
+            mediaPlayer.start()
         }
         sendNotification(currentMusic.value)
     }
@@ -151,6 +151,7 @@ class MusicPlayerService: Service() {
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setStyle(style)
+            .setSilent(true)
             .setContentTitle(musicData.title)
             .setContentText(musicData.artist)
             .addAction(R.drawable.outline_skip_previous_24, PREV, createPendingIntent(PREV))

@@ -28,6 +28,10 @@ inline fun <reified T : Any> serializableType(
 
 
 fun MediaPlayer.playMusicData(musicData: MusicData, onPreparedListener: () -> Unit){
+    if (musicData.dataUrl.isEmpty()) {
+        onPreparedListener.invoke()
+        return
+    }
     setDataSource(musicData.dataUrl)
     prepareAsync()
     setOnPreparedListener {
